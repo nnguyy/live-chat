@@ -1,4 +1,4 @@
-const socket = io(); // Connect to WebSocket server
+const socket = io("wss://live-chat-50to.onrender.com"); // Connect to WebSocket server
 const input = document.getElementById('message-input');
 const messages = document.getElementById('messages');
 const sendButton = document.getElementById('send-button');
