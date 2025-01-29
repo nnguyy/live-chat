@@ -1,37 +1,17 @@
-<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Chat</title>
-  <link rel ="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <title>Live Chat</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="messages"></div>
-  <input id="message-input" type="text" placeholder="Type a message..." />
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-
-    const messageInput = document.getElementById('message-input');
-    const messagesDiv = document.getElementById('messages');
-
-    // Send a message when the user presses enter
-    messageInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' && messageInput.value.trim()) {
-        socket.emit('chat message', messageInput.value);
-        messageInput.value = '';
-      }
-    });
-
-    // Display incoming messages
-    socket.on('chat message', (msg) => {
-      const messageElement = document.createElement('div');
-      messageElement.textContent = msg;
-      messagesDiv.appendChild(messageElement);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll
-    });
-  </script>
+    <div id="chat-container">
+        <ul id="messages"></ul>
+        <input id="message-input" type="text" placeholder="Type a message..." autocomplete="off">
+        <button id="send-button">Send</button>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

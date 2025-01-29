@@ -6,26 +6,19 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Serve static files for the frontend
-app.use(express.static('public'));
+app.use(express.static('public')); // Serve frontend files
 
-// Handle incoming socket connections
 io.on('connection', (socket) => {
-  console.log('A user connected');
-  
-  // Handle chat messages
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
+    console.log('User connected');
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
+    socket.on('chat message', (msg) => {
+      io.emit('chat message', {msg, sender : socket.id}); // Send message to all clients
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
 });
 
-// Start the server
-const handler = (req, res) => {
-  app(req, res);  // Delegate to the Express app
-};
-
-module.exports = handler;
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
