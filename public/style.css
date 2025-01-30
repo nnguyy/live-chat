@@ -16,7 +16,7 @@ body {
 #messages {
     list-style-type: none;
     padding: 0;
-    height: 200px;
+    height: 400px; 
     overflow-y: auto;
     border: 1px solid #ccc;
     background: #1a1a1a;
