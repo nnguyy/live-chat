@@ -4,6 +4,5 @@ pkgs.mkShell {
   buildInputs = [ 
     pkgs.nodejs 
     pkgs.nodePackages.npm 
-    pkgs.mongodb
   ];
 }
