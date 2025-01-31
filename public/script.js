@@ -19,12 +19,14 @@ socket.on('chat message', (data) => {
   messages.appendChild(li);
 });
 
-// Load history
+// Clear once, then append all
 socket.on('load history', (history) => {
+  messages.innerHTML = ''; // Clear once here
   history.forEach(msg => {
-    messages.innerHTML = '';
     const li = document.createElement('li');
+    li.className = `message ${msg.sender === socket.id ? 'sent' : 'received'}`; // Add style
     li.textContent = `${msg.sender}: ${msg.text}`;
     messages.appendChild(li);
   });
+  messages.scrollTop = messages.scrollHeight;
 });
