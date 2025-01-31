@@ -28,7 +28,11 @@ let onlineUsers = 0;
 io.on('connection', (socket) => {
   console.log('User connected');
   onlineUsers++;
-  io.emit('update online count', onlineUsers);
+
+  // send inital count to new user only
+  socket.emit('update online count', onlineUsers);
+  // broadcast others about new count 
+  socket.broadcast.emit('update online count', onlineUsers);
 
   // Load last 10 messages (for simplicity)
   Message.find().sort({ timestamp: -1 }).limit(10)
@@ -48,9 +52,11 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('disconnect', () => console.log('User disconnected'));
-  onlineUsers--;
-  io.emit('update online count', onlineUsers);
+  socket.on('disconnect', () => {
+    console.log('User disconnected')
+    onlineUsers--;
+    io.emit('update online count', onlineUsers);
+  });
 });
 
 // Serve static files

@@ -3,6 +3,11 @@ const input = document.getElementById('message-input');
 const messages = document.getElementById('messages');
 const onlineCounter = document.getElementById('online-counter');
 
+// update online count
+socket.on('update online count', (count) => {
+  onlineCounter.textContent = `${count} connected user${count !== 1 ? 's' : ''}`;
+});
+
 // Send message
 document.getElementById('send-button').addEventListener('click', () => {
   const message = input.value.trim();
@@ -10,11 +15,6 @@ document.getElementById('send-button').addEventListener('click', () => {
     socket.emit('chat message', message);
     input.value = '';
   }
-});
-
-// update online count
-socket.on('update online count', (count) => {
-  onlineCounter.textContent = `${count} connected user${count !== 1 ? 's' : ''}`;
 });
 
 // When receiving messages
