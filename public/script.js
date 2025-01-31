@@ -1,33 +1,29 @@
-const socket = io(); // Connect to WebSocket server
+const socket = io();
 const input = document.getElementById('message-input');
 const messages = document.getElementById('messages');
-const sendButton = document.getElementById('send-button');
 
-sendButton.addEventListener('click', sendMessage);
-input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
+// Send message
+document.getElementById('send-button').addEventListener('click', () => {
+  const message = input.value.trim();
+  if (message) {
+    socket.emit('chat message', message);
+    input.value = '';
+  }
 });
 
-function sendMessage() {
-    const message = input.value.trim();
-    if (message) {
-        socket.emit('chat message', message); // Send message to server
-        input.value = ''; // Clear input box after sending
-    }
-}
+// Receive messages
+socket.on('chat message', (data) => {
+  const li = document.createElement('li');
+  li.textContent = `${data.sender}: ${data.msg}`; // Basic display
+  messages.appendChild(li);
+  messages.scrollTop = messages.scrollHeight; // Auto-scroll
+});
 
-// Listen for new messages from the server
-socket.on('chat message', function(data) {
-    const { msg, sender } = data;
-    const messageElement = document.createElement('li');
-
-    const isUser = sender === socket.id;
-    messageElement.classList.add('message', isUser ? 'sent' : 'received');
-
-    messageElement.textContent = msg;
-    document.getElementById('messages').appendChild(messageElement);
-
-    //auto scroll
-    const messageContainer = document.getElementById('messages');
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+// Load history
+socket.on('load history', (history) => {
+  history.forEach(msg => {
+    const li = document.createElement('li');
+    li.textContent = `${msg.sender}: ${msg.text}`;
+    messages.appendChild(li);
+  });
 });
