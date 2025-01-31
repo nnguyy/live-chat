@@ -74,6 +74,7 @@ body {
   padding: 0.75rem;
   background: var(--input-gray);
   gap: 0.5rem;
+  align-items: center;
 }
 
 #message-input {
@@ -91,6 +92,7 @@ body {
   padding: 0.75rem 1rem;
   color: white;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 #messages::-webkit-scrollbar {
