@@ -1,6 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const mongoose = require('mongoose');
+
+// MongoDB Atlas connection
+mongoose.connect(process.env.MONGODB_URI)
+    .then(()=> console.log('Connected to MongoDB Atlas'))
+    .catch(()=> console.log('MongoDB error:', err));
 
 const app = express();
 const server = http.createServer(app);
