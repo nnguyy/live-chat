@@ -1,6 +1,7 @@
 const socket = io();
 const input = document.getElementById('message-input');
 const messages = document.getElementById('messages');
+const onlineCounter = document.getElementById('online-counter');
 
 // Send message
 document.getElementById('send-button').addEventListener('click', () => {
@@ -9,6 +10,10 @@ document.getElementById('send-button').addEventListener('click', () => {
     socket.emit('chat message', message);
     input.value = '';
   }
+});
+
+socket.on('update online count', (count) => {
+  onlineCounter.textContent = `${count} user${count !== 1 ? 's' : ''} online`;
 });
 
 // When receiving messages
