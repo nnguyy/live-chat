@@ -27,13 +27,10 @@ let onlineUsers = 0;
 // WebSocket setup
 io.on('connection', (socket) => {
   console.log('User connected');
-
-  // send inital count to new user only
-  socket.emit('update online count', onlineUsers);
-  // broadcast others about new count 
-  socket.broadcast.emit('update online count', onlineUsers);
-
   onlineUsers++;
+
+  const othersCount = onlineUsers - 1;
+  io.emit('update others count', othersCount);
 
   // Load last 10 messages (for simplicity)
   Message.find().sort({ timestamp: -1 }).limit(10)
