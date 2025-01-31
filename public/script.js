@@ -17,6 +17,7 @@ socket.on('chat message', (data) => {
   li.className = `message ${data.sender === socket.id ? 'sent' : 'received'}`;
   li.textContent = `${data.sender}: ${data.msg}`;
   messages.appendChild(li);
+  messages.scrollTop = messages.scrollHeight;
 });
 
 // Clear once, then append all
