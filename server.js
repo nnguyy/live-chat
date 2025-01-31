@@ -28,7 +28,6 @@ let onlineUsers = 0;
 io.on('connection', (socket) => {
   console.log('User connected');
   onlineUsers++;
-
   io.emit('update online count', onlineUsers);
 
   // Load last 10 messages (for simplicity)
