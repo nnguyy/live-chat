@@ -14,7 +14,7 @@ document.getElementById('send-button').addEventListener('click', () => {
 
 // update online count
 socket.on('update online count', (count) => {
-  onlineCounter.textContent = `${count} connected${count !== 1 ? 's' : ''} users`;
+  onlineCounter.textContent = `${count} connected user${count !== 1 ? 's' : ''}`;
 });
 
 // When receiving messages
