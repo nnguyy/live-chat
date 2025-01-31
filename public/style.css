@@ -21,6 +21,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  overflow: hidden;
 }
 
 #chat-container {
@@ -31,6 +32,7 @@ body {
   background: #000000;
   border: 1px solid var(--border-gray);
   overflow: hidden;
+  height: 100vh;
 }
 
 #online-counter {
@@ -44,7 +46,7 @@ body {
 #messages {
   list-style: none;
   padding: 1rem;
-  height: 60vh;
+  flex: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -105,7 +107,11 @@ body {
 
 @media (max-width: 600px) {
   body {
-    padding: 0.5rem;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
   }
 
   #chat-container {
@@ -114,6 +120,6 @@ body {
   }
 
   #messages {
-    height: calc(100vh - 110px);
+    flex-grow: 1;
   }
 }
