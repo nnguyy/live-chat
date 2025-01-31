@@ -5,7 +5,7 @@ const onlineCounter = document.getElementById('online-counter');
 
 // update online count
 socket.on('update online count', (count) => {
-  onlineCounter.textContent = `${count} other user${count !== 1 ? 's' : ''} online`;
+  onlineCounter.textContent = `${count} user${count !== 1 ? 's' : ''} online`;
 });
 
 // Send message
