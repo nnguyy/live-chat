@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
   onlineUsers++;
 
   const othersCount = onlineUsers - 1;
-  io.emit('update others count', othersCount);
+  io.emit('update online count', othersCount);
 
   // Load last 10 messages (for simplicity)
   Message.find().sort({ timestamp: -1 }).limit(10)
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected')
     onlineUsers--;
-    io.emit('update online count', onlineUsers);
+    io.emit('update online count', otherUsers);
   });
 });
 
