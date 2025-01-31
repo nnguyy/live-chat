@@ -11,12 +11,12 @@ document.getElementById('send-button').addEventListener('click', () => {
   }
 });
 
-// Receive messages
+// When receiving messages
 socket.on('chat message', (data) => {
   const li = document.createElement('li');
-  li.textContent = `${data.sender}: ${data.msg}`; // Basic display
+  li.className = `message ${data.sender === socket.id ? 'sent' : 'received'}`;
+  li.textContent = `${data.sender}: ${data.msg}`;
   messages.appendChild(li);
-  messages.scrollTop = messages.scrollHeight; // Auto-scroll
 });
 
 // Load history
