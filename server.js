@@ -27,10 +27,12 @@ let onlineUsers = 0;
 // WebSocket setup
 io.on('connection', (socket) => {
   console.log('User connected');
-  onlineUsers++;
 
   // send inital count to new user only
   socket.emit('update online count', onlineUsers);
+
+  onlineUsers++;
+
   // broadcast others about new count 
   socket.broadcast.emit('update online count', onlineUsers);
 
