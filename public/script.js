@@ -22,6 +22,7 @@ socket.on('chat message', (data) => {
 // Load history
 socket.on('load history', (history) => {
   history.forEach(msg => {
+    messages.innerHTML = '';
     const li = document.createElement('li');
     li.textContent = `${msg.sender}: ${msg.text}`;
     messages.appendChild(li);
