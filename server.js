@@ -30,11 +30,10 @@ io.on('connection', (socket) => {
 
   // send inital count to new user only
   socket.emit('update online count', onlineUsers);
-
-  onlineUsers++;
-
   // broadcast others about new count 
   socket.broadcast.emit('update online count', onlineUsers);
+
+  onlineUsers++;
 
   // Load last 10 messages (for simplicity)
   Message.find().sort({ timestamp: -1 }).limit(10)
