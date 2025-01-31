@@ -1,2 +1,5 @@
 .envrc
-.env
+.env 
+.shell.nix
+/node_modules
+
