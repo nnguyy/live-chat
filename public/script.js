@@ -2,6 +2,7 @@ const socket = io();
 const input = document.getElementById('message-input');
 const messages = document.getElementById('messages');
 const onlineCounter = document.getElementById('online-counter');
+const usernameDisplay = document.getElementById('username-display');
 
 // update online count
 socket.on('update online count', (count) => {
@@ -37,3 +38,18 @@ socket.on('load history', (history) => {
   });
   messages.scrollTop = messages.scrollHeight;
 });
+
+function updateUsername(newUsername) {
+  username = newUsername || 'Anonymous';
+  localStorage.setItem('chatUsername', username);
+  usernameDisplay.textContent = username;
+  socket.emit('update username', username);
+}
+
+document.getElementById('change-username').addEventListener('click', () => {
+  const newUsername = prompt('Enter new username:', username);
+  if (newUsername !== null) updateUsername(newUsername);
+});
+
+// Initialize username
+updateUsername(localStorage.getItem('chatUsername'));

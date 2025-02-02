@@ -23,35 +23,50 @@ const messageSchema = new mongoose.Schema({
 const Message = mongoose.model('Message', messageSchema);
 
 let onlineUsers = 0;
+const users = new Map();
 
 // WebSocket setup
 io.on('connection', (socket) => {
   console.log('User connected');
   onlineUsers++;
+
+  // inialize user
+  const username = socket.handshake.auth.username || 'Anonymous';
+  users.set(socket.id, username);
   io.emit('update online count', onlineUsers);
 
-  // Load last 10 messages (for simplicity)
-  Message.find().sort({ timestamp: -1 }).limit(10)
-    .then(messages => socket.emit('load history', messages.reverse()));
+  socket.on('update username', (newUsername) => {
+    users.set(socket.id, newUsername);
+    io.emit('user updated', {
+      old: username,
+      new: newUsername
+    });
+  });
 
   // Handle messages
   socket.on('chat message', async (msg) => {
-    // Save to MongoDB (no sanitization)
-    const newMsg = new Message({ text: msg, sender: socket.id });
+    // Save to MongoDB
+    const username = users.get(socket.id);
+    const newMsg = new Message({ text: msg, sender: username });
     await newMsg.save();
 
     // Broadcast to everyone
     io.emit('chat message', { 
       msg, 
-      sender: socket.id, 
+      sender: username,
       timestamp: new Date().toLocaleTimeString() 
     });
   });
+
+  // Load last 10 messages (for simplicity)
+  Message.find().sort({ timestamp: -1 }).limit(10)
+    .then(messages => socket.emit('load history', messages.reverse()));
 
   socket.on('disconnect', () => {
     console.log('User disconnected')
     onlineUsers--;
     io.emit('update online count', onlineUsers);
+    users.delete(socket.id);
   });
 });
 

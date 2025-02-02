@@ -117,3 +117,28 @@ body {
     height: calc(100vh - 110px);
   }
 }
+
+#user-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#current-user {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+#change-username {
+  background: none;
+  border: 1px solid #444;
+  color: #666;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#change-username:hover {
+  border-color: #555;
+  color: #888;
+}
