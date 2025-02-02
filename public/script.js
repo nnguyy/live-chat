@@ -21,7 +21,7 @@ document.getElementById('send-button').addEventListener('click', () => {
 // When receiving messages
 socket.on('chat message', (data) => {
   const li = document.createElement('li');
-  li.className = `message ${data.sender === socket.id ? 'sent' : 'received'}`;
+  li.className = `message ${data.sender === username ? 'sent' : 'received'}`;
   li.textContent = `${data.sender}: ${data.msg}`;
   messages.appendChild(li);
   messages.scrollTop = messages.scrollHeight;
