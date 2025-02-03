@@ -23,13 +23,23 @@ socket.on('update online count', (count) => {
   onlineCounter.textContent = `${count} user${count !== 1 ? 's' : ''} online`;
 });
 
-// Send message when the send button is clicked
-document.getElementById('send-button').addEventListener('click', () => {
+function sendMessage() {
   const message = input.value.trim();
   if (message) {
     // Send an object with message text, userId, and username
     socket.emit('chat message', { msg: message, userId: userId, username: username });
     input.value = '';
+  }
+}
+
+// Send message when the send button is clicked
+document.getElementById('send-button').addEventListener('click', sendMessage);
+
+// Also send message when the Enter key is pressed
+input.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault(); // Prevent any default action like form submission
+    sendMessage();
   }
 });
 
@@ -38,7 +48,19 @@ socket.on('chat message', (data) => {
   const li = document.createElement('li');
   // Use the userId for comparison so messages from this user are styled as "sent"
   li.className = `message ${data.userId === userId ? 'sent' : 'received'}`;
-  li.textContent = `${data.username}: ${data.msg}`;
+
+  // create a container for the message text
+  const messageText = document.createElement('div');
+  messageText.textContent = data.msg;
+  messageText.classList.add('message-text');
+
+  // create a container for the username
+  const usernameText = document.createElement('div');
+  usernameText.textContent = data.username;
+  usernameText.classList.add('username-text');
+
+  li.appendChild(messageText);
+  li.appendChild(usernameText);
   messages.appendChild(li);
   messages.scrollTop = messages.scrollHeight;
 });
@@ -49,7 +71,17 @@ socket.on('load history', (history) => {
   history.forEach(msg => {
     const li = document.createElement('li');
     li.className = `message ${msg.userId === userId ? 'sent' : 'received'}`;
-    li.textContent = `${msg.username}: ${msg.text}`;
+
+    const messageText = document.createElement('div');
+    messageText.textContent = msg.text;
+    messageText.classList.add('message-text');
+
+    const usernameText = document.createElement('div');
+    usernameText.textContent = msg.username;
+    usernameText.classList.add('username-text');
+
+    li.appendChild(messageText);
+    li.appendChild(usernameText);
     messages.appendChild(li);
   });
   messages.scrollTop = messages.scrollHeight;

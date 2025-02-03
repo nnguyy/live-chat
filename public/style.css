@@ -142,3 +142,26 @@ body {
   border-color: #555;
   color: #888;
 }
+
+.message-text {
+  margin-bottom: 0.2rem;
+}
+
+.message.sent .message-text {
+  text-align: right;
+}
+
+.username-text {
+  font-size: 0.8em;
+  color: #aaa; /* lighter color for username */
+}
+
+/* Align username based on the message type */
+.message.sent .username-text {
+  text-align: right;
+  color: #ffffff;
+}
+
+.message.received .username-text {
+  text-align: left;
+}
