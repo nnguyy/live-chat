@@ -31,52 +31,59 @@ io.on('connection', (socket) => {
   console.log('User connected');
   onlineUsers++;
 
-  // inialize user
-  const username = socket.handshake.auth.username || 'Anonymous';
+  // Retrieve the persistent userId from the handshake
+  const userId = socket.handshake.auth.userId || 'default-user-id';
+  let username = 'Anonymous'; // default username
   users.set(socket.id, username);
   io.emit('update online count', onlineUsers);
 
+  // Handle username updates from the client
   socket.on('update username', (newUsername) => {
-    users.set(socket.id, newUsername);
+    const oldUsername = username;
+    username = newUsername || 'Anonymous';
+    users.set(socket.id, username);
     io.emit('user updated', {
-      old: username,
-      new: newUsername
+      old: oldUsername,
+      new: username
     });
   });
 
-  // Handle messages
-  socket.on('chat message', async (msg) => {
-    // Save to MongoDB
-    const username = users.get(socket.id);
+  // Handle chat messages from the client
+  socket.on('chat message', async (data) => {
+    // Expecting an object { msg, userId, username }
+    const { msg, userId: clientUserId, username: clientUsername } = data;
+    // Save the new message to MongoDB
     const newMsg = new Message({
       text: msg,
-      username: username,
-      userId: userId
+      username: clientUsername,
+      userId: clientUserId
     });
     await newMsg.save();
 
-    // Broadcast to everyone
+    // Broadcast the message to all clients
     io.emit('chat message', { 
       msg, 
-      username: username,
-      userId: userId,
+      username: clientUsername,
+      userId: clientUserId,
       timestamp: new Date().toLocaleTimeString() 
     });
   });
 
-  // Load last 10 messages (for simplicity)
+  // Load the last 10 messages from the database and send to the client
   Message.find().sort({ timestamp: -1 }).limit(10)
-    .then(messages => socket.emit('load history', messages.reverse()));
+    .then(messages => socket.emit('load history', messages.reverse()))
+    .catch(err => console.error('Error loading message history:', err));
 
+  // Handle client disconnect
   socket.on('disconnect', () => {
-    console.log('User disconnected')
+    console.log('User disconnected');
     onlineUsers--;
     io.emit('update online count', onlineUsers);
     users.delete(socket.id);
   });
 });
 
-// Serve static files
+// Serve static files from the "public" folder
 app.use(express.static('public'));
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
