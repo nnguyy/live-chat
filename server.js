@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Simple message schema
 const messageSchema = new mongoose.Schema({
   text: String,
-  sender: String,
+  username: String,
   timestamp: { type: Date, default: Date.now }
 });
 const Message = mongoose.model('Message', messageSchema);
@@ -47,13 +47,13 @@ io.on('connection', (socket) => {
   socket.on('chat message', async (msg) => {
     // Save to MongoDB
     const username = users.get(socket.id);
-    const newMsg = new Message({ text: msg, sender: username });
+    const newMsg = new Message({ text: msg, username: username });
     await newMsg.save();
 
     // Broadcast to everyone
     io.emit('chat message', { 
       msg, 
-      sender: username,
+      username: username,
       timestamp: new Date().toLocaleTimeString() 
     });
   });

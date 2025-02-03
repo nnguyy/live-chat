@@ -21,8 +21,8 @@ document.getElementById('send-button').addEventListener('click', () => {
 // When receiving messages
 socket.on('chat message', (data) => {
   const li = document.createElement('li');
-  li.className = `message ${data.sender === username ? 'sent' : 'received'}`;
-  li.textContent = `${data.sender}: ${data.msg}`;
+  li.className = `message ${data.username === username ? 'sent' : 'received'}`;
+  li.textContent = `${data.username}: ${data.msg}`;
   messages.appendChild(li);
   messages.scrollTop = messages.scrollHeight;
 });
@@ -32,8 +32,8 @@ socket.on('load history', (history) => {
   messages.innerHTML = ''; // Clear once here
   history.forEach(msg => {
     const li = document.createElement('li');
-    li.className = `message ${msg.sender === socket.id ? 'sent' : 'received'}`; // Add style
-    li.textContent = `${msg.sender}: ${msg.text}`;
+    li.className = `message ${msg.username === socket.id ? 'sent' : 'received'}`; // Add style
+    li.textContent = `${msg.username}: ${msg.text}`;
     messages.appendChild(li);
   });
   messages.scrollTop = messages.scrollHeight;
